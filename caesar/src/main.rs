@@ -6,8 +6,8 @@ fn main() {
     println!("Choose an option:");
     println!("1. Encrypt input string");
     println!("2. Encrypt text file");
-    println!("3. Dencrypt input string");
-    println!("4. Dencrypt text file");
+    println!("3. Decrypt input string");
+    println!("4. Decrypt text file");
     println!("5. Exit");
 
     // Read user input
@@ -46,7 +46,7 @@ fn main() {
             println!("Goodbye!");
         }
         _ => {
-            println!("Invalid choice. Please select 1, 2, or 3.");
+            println!("Invalid choice. Please select 1 to 5.");
         }
     }
 
