@@ -58,27 +58,31 @@ fn main() {
             let n: BigUint = input_biguint_value();
             cyphertext = input_biguint_value();
             plaintext = decrypt(&cyphertext, &key, &n);
-            println!("Decrypted message: {}",cyphertext);
+            println!("Decrypted message: {}",plaintext);
         }
         4 => {
             println!("Insert key(e or d, and n):");
             let key: BigUint = input_biguint_value();
             let n: BigUint = input_biguint_value();
+            let mut cleaned_value = String::new();
             cyphertext = match input_file() {
-                Ok(value) => match value.parse::<BigUint>() {
+                Ok(value) => {
+                    cleaned_value = value.trim().replace("\n", "").replace("\r", "");
+                    match cleaned_value.parse::<BigUint>() {
                     Ok(big_uint) => big_uint,
                     Err(e) => {
                         println!("Failed to convert file to cyphertext: {}", e);
                         BigUint::default()
                     }
-                },
+                    }
+                }
                 Err(e) => {
                     println!("Error occurred: {}", e);
                     BigUint::default()
                 }
             };
             plaintext = decrypt(&cyphertext, &key, &n);
-            println!("Decrypted message: {}",cyphertext);
+            println!("Decrypted message: {}",plaintext);
         }
         5 => {
             println!("Goodbye!");
@@ -139,11 +143,9 @@ fn input_biguint_value() -> BigUint {//measure times?
 fn generate_keys(bits: usize) -> (BigUint,BigUint,BigUint,BigUint) {
     let mut rng = thread_rng();
 
-    let p = num_bigint::BigUint::parse_bytes((Generator::new_prime(bits / 2)).to_bytes_be().as_slice(), 10)
-        .expect("Failed to convert num_primes::BigUint to num_bigint::BigUint");
+    let p = BigUint::from_bytes_be(&(Generator::new_prime(bits / 2)).to_bytes_be());
 
-    let q = num_bigint::BigUint::parse_bytes((Generator::new_prime(bits / 2)).to_bytes_be().as_slice(), 10)
-        .expect("Failed to convert num_primes::BigUint to num_bigint::BigUint");
+    let q = BigUint::from_bytes_be(&(Generator::new_prime(bits / 2)).to_bytes_be());
 
     let n = &p * &q;
     
